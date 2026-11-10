@@ -29,6 +29,20 @@ tailwind.config = {
   .pulse { animation: pulseRing 1.8s infinite; }
   .check { transition: background-color .15s, border-color .15s; }
   input:focus-visible + .check, a:focus-visible, button:focus-visible { outline: 3px solid #FF6A13; outline-offset: 2px; }
+  .anim { transform-box: fill-box; }
+  .flame { transform-origin: 50% 100%; animation: flick 1s ease-in-out infinite; }
+  .pin { animation: pinpull 3s ease-in-out infinite; }
+  .dash { animation: dash 1s linear infinite; }
+  .puff { animation: puff 1.4s ease-out infinite; opacity: 0; }
+  .cone { animation: cone 1.4s ease-in-out infinite; }
+  .sweep { transform-box: view-box; transform-origin: 166px 146px; animation: sweepa 2.6s ease-in-out infinite; }
+  @keyframes flick { 0%,100% { transform: scale(1,1); } 50% { transform: scale(.93,1.09); } }
+  @keyframes pinpull { 0%,15% { transform: translateX(0); } 55%,85% { transform: translateX(-46px); } 100% { transform: translateX(0); } }
+  @keyframes dash { to { stroke-dashoffset: -36; } }
+  @keyframes puff { 0% { transform: translate(0,0) scale(.4); opacity: 0; } 20% { opacity: .9; } 100% { transform: translate(var(--dx),var(--dy)) scale(1.8); opacity: 0; } }
+  @keyframes cone { 0%,100% { opacity: .16; } 50% { opacity: .3; } }
+  @keyframes sweepa { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+  @media (prefers-reduced-motion: reduce) { .anim { animation: none !important; } .puff { opacity: .5; } }
   @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
 </head>
@@ -159,7 +173,7 @@ tailwind.config = {
 <script>
 /* ---------- DỮ LIỆU ---------- */
 /* Muốn dùng ảnh thật: dán đường dẫn ảnh vào trường img của từng bước (ví dụ "images/buoc1.jpg").
-   Để trống thì trang hiển thị minh họa biểu tượng. */
+   Để trống thì trang tự vẽ hình minh họa động bằng SVG. */
 const STEPS = [
   { n: 1, vi: 'Kéo', en: 'Pull', icon: 'shield-off', img: '',
     title: 'Kéo chốt an toàn',
@@ -206,6 +220,50 @@ const CHECKLIST = [
     'Lưu số 114 trong danh bạ và dán ở nơi dễ thấy' ]}
 ];
 
+/* ---------- HÌNH MINH HỌA (SVG vẽ bằng code, không cần tải ảnh) ---------- */
+const defs = `<defs>
+  <linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>
+  <radialGradient id="glow"><stop offset="0" stop-color="#FF6A13" stop-opacity=".55"/><stop offset="1" stop-color="#FF6A13" stop-opacity="0"/></radialGradient>
+</defs>`;
+const floor = `<rect x="0" y="250" width="400" height="50" fill="#111"/><line x1="0" y1="250" x2="400" y2="250" stroke="#3a3a3d" stroke-width="2"/>`;
+const flame = (x, s = 1, d = 0) => `<g transform="translate(${x} 250) scale(${s})">
+  <circle cx="0" cy="-30" r="60" fill="url(#glow)"/>
+  <g class="anim flame" style="animation-delay:${d}s">
+    <path d="M0 0C-26-10-24-44-6-70-4-50 8-46 11-34 20-46 18-58 16-66 38-44 34-8 0 0Z" fill="#FF6A13"/>
+    <path d="M0 0C-12-5-11-22-2-34 0-24 6-22 7-16 14-8 8-2 0 0Z" fill="#FFC23D"/>
+  </g></g>`;
+const ext = (extra = '', lever = 0) => `<g>
+  <rect x="-30" y="0" width="60" height="130" rx="16" fill="#D62828"/>
+  <rect x="-30" y="0" width="60" height="130" rx="16" fill="url(#shine)"/>
+  <rect x="-22" y="46" width="44" height="44" rx="6" fill="#fff" opacity=".92"/>
+  <path d="M0 52c-10 9-9 20-2 26-1-7 3-9 4-14 4 4 7 8 3 14 8-6 9-18-5-26z" fill="#FF6A13"/>
+  <rect x="-8" y="-16" width="16" height="18" fill="#3a3a3c"/>
+  <rect x="-18" y="-25" width="46" height="10" rx="4" fill="#2b2b2d"/>
+  <rect x="-20" y="-36" width="44" height="9" rx="4" fill="#5a5a5e" transform="rotate(${lever} 24 -31)"/>
+  <path d="M10 -18C46 -18 52 10 72 24" fill="none" stroke="#1d1d1f" stroke-width="7" stroke-linecap="round"/>
+  <rect x="66" y="18" width="16" height="12" rx="3" fill="#1d1d1f" transform="rotate(35 74 24)"/>
+  ${extra}</g>`;
+const svg = body => `<svg viewBox="0 0 400 300" class="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">${defs}${floor}${body}</svg>`;
+const puffs = [[120,48,0],[135,60,.25],[110,40,.5],[130,66,.75],[100,52,1]].map(([dx,dy,d]) =>
+  `<circle class="anim puff" cx="186" cy="146" r="9" fill="#fff" style="--dx:${dx}px;--dy:${dy}px;animation-delay:${d}s"/>`).join('');
+
+const SCENES = {
+  1: () => svg(`${flame(335, .6)}<g transform="translate(150 120)">${ext(`
+      <g class="anim pin"><line x1="-24" y1="-31" x2="14" y2="-31" stroke="#e5e5e5" stroke-width="3"/>
+      <circle cx="-31" cy="-31" r="8" fill="none" stroke="#e5e5e5" stroke-width="3"/>
+      <circle cx="-52" cy="-31" r="13" fill="#E8B48C"/></g>`)}</g>
+    <path d="M60 80 L30 80 M30 80 l9 -7 M30 80 l9 7" stroke="#FF6A13" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`),
+  2: () => svg(`${flame(330)}<g transform="translate(110 120)">${ext()}</g>
+    <line x1="186" y1="146" x2="322" y2="238" stroke="#FFC23D" stroke-width="3" stroke-dasharray="10 8" class="anim dash"/>
+    <circle cx="322" cy="238" r="16" fill="none" stroke="#FFC23D" stroke-width="3"/>
+    <path d="M322 214v10M322 252v10M298 238h10M336 238h10" stroke="#FFC23D" stroke-width="3" stroke-linecap="round"/>`),
+  3: () => svg(`${flame(330)}<g transform="translate(110 120)">${ext('', -13)}</g>
+    <polygon points="186,146 312,208 318,262" fill="#fff" opacity=".22" class="anim cone"/>${puffs}`),
+  4: () => svg(`${flame(285, .8, 0)}${flame(335, 1, .2)}${flame(375, .7, .4)}<g transform="translate(90 120)">${ext('', -13)}</g>
+    <g class="anim sweep"><polygon points="166,146 300,206 300,262" fill="#fff" opacity=".24"/></g>
+    <path d="M250 288 H370 M250 288 l10 -7 M250 288 l10 7 M370 288 l-10 -7 M370 288 l-10 7" stroke="#FF6A13" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`)
+};
+
 /* ---------- 4 BƯỚC ---------- */
 const stepsEl = document.getElementById('steps');
 const detailEl = document.getElementById('step-detail');
@@ -215,7 +273,7 @@ function visual(s, big) {
   const h = big ? 'h-64 md:h-full min-h-[260px]' : 'h-40';
   const inner = s.img
     ? `<img src="${s.img}" alt="Minh họa: ${s.title}" loading="lazy" class="absolute inset-0 h-full w-full object-cover">`
-    : `<i data-lucide="${s.icon}" class="relative ${big ? 'h-28 w-28' : 'h-14 w-14'} text-ember" stroke-width="1.5"></i>`;
+    : SCENES[s.n]();
   return `<div class="scene photo-fade relative flex ${h} items-center justify-center overflow-hidden">${inner}
     <span class="absolute left-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-crimson text-xl font-black text-white ring-4 ring-white/20">${s.n}</span>
     <span class="absolute bottom-3 left-4 z-10 text-sm font-semibold text-white/80">${s.en}</span></div>`;
