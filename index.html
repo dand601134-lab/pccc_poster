@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cẩm nang PCCC hộ gia đình &amp; Hướng dẫn sử dụng bình chữa cháy</title>
+<meta name="description" content="Quy trình 4 bước dùng bình chữa cháy (Kéo – Hướng – Bóp – Quét) và danh sách kiểm tra phòng cháy tại nhà. Khẩn cấp gọi 114.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+    colors: { crimson: '#B3121F', deep: '#7A0A14', char: '#1C1C1E', ember: '#FF6A13' }
+  } }
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { padding-bottom: 76px; }
+  .scene { background:
+      radial-gradient(circle at 80% 15%, rgba(255,106,19,.55), transparent 45%),
+      linear-gradient(160deg, #2a2a2d, #1C1C1E 70%); }
+  .photo-fade::after { content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(28,28,30,.85), transparent 60%); }
+  @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(255,106,19,.7);} 100% { box-shadow: 0 0 0 18px rgba(255,106,19,0);} }
+  .pulse { animation: pulseRing 1.8s infinite; }
+  .check { transition: background-color .15s, border-color .15s; }
+  input:focus-visible + .check, a:focus-visible, button:focus-visible { outline: 3px solid #FF6A13; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body class="bg-stone-100 font-sans text-char antialiased">
+
+<!-- HEADER -->
+<header class="relative overflow-hidden bg-char text-white">
+  <div class="absolute inset-0 opacity-60" style="background:radial-gradient(ellipse at 85% 0%, #B3121F, transparent 60%), radial-gradient(ellipse at 100% 100%, #FF6A13, transparent 45%)"></div>
+  <div class="relative mx-auto max-w-6xl px-5 py-14 md:py-20 grid md:grid-cols-[1fr_auto] gap-10 items-center">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium">
+        <i data-lucide="flame" class="h-4 w-4 text-ember"></i> Áp phích an toàn dành cho mọi gia đình
+      </p>
+      <h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
+        CẨM NANG PCCC HỘ GIA ĐÌNH<br><span class="text-white/80">&amp; AN TOÀN CHÁY NỔ</span>
+      </h1>
+      <p class="mt-5 max-w-xl text-lg text-white/75">Biết dùng bình chữa cháy trong 4 bước và kiểm tra nhà mình trong 5 phút có thể quyết định một đám cháy nhỏ dừng lại hay lan rộng.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#binh-chua-chay" class="rounded-xl bg-ember px-5 py-3 font-bold text-char hover:bg-orange-400 transition">Xem 4 bước dùng bình</a>
+        <a href="#kiem-tra" class="rounded-xl border border-white/30 px-5 py-3 font-semibold hover:bg-white/10 transition">Kiểm tra nhà bạn</a>
+      </div>
+    </div>
+    <a href="tel:114" aria-label="Gọi đường dây nóng cứu hỏa 114"
+       class="pulse mx-auto flex h-44 w-44 sm:h-52 sm:w-52 flex-col items-center justify-center rounded-full bg-crimson text-center ring-8 ring-white/10 hover:bg-deep transition">
+      <i data-lucide="phone-call" class="h-8 w-8 text-ember"></i>
+      <span class="mt-1 text-sm font-semibold text-white/80">Hotline cứu hỏa</span>
+      <span class="text-6xl font-black leading-none">114</span>
+    </a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-6xl px-5">
+
+  <!-- CẢNH BÁO TRƯỚC KHI DÙNG -->
+  <section class="-mt-8 relative z-10">
+    <div class="rounded-2xl bg-white p-5 shadow-xl border-l-8 border-ember flex gap-4 items-start">
+      <i data-lucide="triangle-alert" class="h-7 w-7 shrink-0 text-crimson mt-0.5"></i>
+      <p class="text-base leading-relaxed"><strong>Chỉ chữa cháy khi đám cháy còn nhỏ</strong> và lối thoát hiểm phía sau lưng bạn còn thông. Lửa đã lan rộng, khói dày hoặc bạn không chắc chắn: <strong>rời khỏi nhà ngay và gọi 114.</strong></p>
+    </div>
+  </section>
+
+  <!-- SECTION 1 -->
+  <section id="binh-chua-chay" class="py-16 scroll-mt-4">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl md:text-4xl font-black tracking-tight">4 bước dùng bình chữa cháy</h2>
+      <p class="mt-3 text-lg text-stone-600">Phương pháp P.A.S.S. quốc tế, đọc theo tiếng Việt: Kéo – Hướng – Bóp – Quét. Chọn một bước để xem chi tiết.</p>
+    </div>
+
+    <div id="steps" class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" role="tablist" aria-label="4 bước dùng bình chữa cháy"></div>
+
+    <div id="step-detail" class="mt-6 overflow-hidden rounded-3xl bg-char text-white shadow-xl grid md:grid-cols-2" aria-live="polite"></div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section id="kiem-tra" class="pb-16 scroll-mt-4">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl md:text-4xl font-black tracking-tight">Kiểm tra phòng cháy tại nhà</h2>
+        <p class="mt-3 text-lg text-stone-600">Tích vào từng mục bạn đã làm. Tiến độ được lưu ngay trên trình duyệt của bạn.</p>
+      </div>
+      <button id="reset" class="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-stone-200 transition">Làm lại từ đầu</button>
+    </div>
+
+    <div class="mt-8 rounded-2xl bg-white p-5 shadow">
+      <div class="flex items-center justify-between text-sm font-semibold">
+        <span id="progress-text">0/0 mục hoàn thành</span>
+        <span id="progress-msg" class="text-stone-500"></span>
+      </div>
+      <div class="mt-3 h-3 w-full overflow-hidden rounded-full bg-stone-200" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar-wrap">
+        <div id="bar" class="h-full w-0 rounded-full bg-gradient-to-r from-crimson to-ember transition-all duration-500"></div>
+      </div>
+    </div>
+
+    <div id="checklist" class="mt-6 grid gap-5 md:grid-cols-2"></div>
+  </section>
+
+  <!-- LOẠI BÌNH -->
+  <section class="pb-16">
+    <h2 class="text-2xl md:text-3xl font-black tracking-tight">Chọn đúng bình cho đúng đám cháy</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-2xl bg-white p-5 shadow border-t-4 border-crimson">
+        <h3 class="font-extrabold text-lg">Bình bột ABC</h3>
+        <p class="mt-2 text-stone-600">Dùng đa năng cho chất rắn, chất lỏng, khí cháy và thiết bị điện. Phù hợp để đặt trong nhà.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-5 shadow border-t-4 border-ember">
+        <h3 class="font-extrabold text-lg">Bình khí CO₂</h3>
+        <p class="mt-2 text-stone-600">Không để lại cặn, hợp với thiết bị điện, điện tử. Tầm phun ngắn, cầm vào loa phun dễ bị lạnh buốt.</p>
+      </div>
+      <div class="rounded-2xl bg-white p-5 shadow border-t-4 border-char">
+        <h3 class="font-extrabold text-lg">Không dùng nước</h3>
+        <p class="mt-2 text-stone-600">Tuyệt đối không dội nước vào chảo dầu mỡ đang cháy hoặc thiết bị điện đang có điện.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-char text-white">
+  <div class="mx-auto max-w-6xl px-5 py-12 grid gap-8 md:grid-cols-3">
+    <div class="md:col-span-2">
+      <h2 class="text-2xl font-black">Khi có cháy, nhớ 4 điều</h2>
+      <ul class="mt-4 space-y-3 text-white/85">
+        <li class="flex gap-3"><i data-lucide="bell-ring" class="h-5 w-5 mt-1 shrink-0 text-ember"></i>Báo động cho mọi người trong nhà và hàng xóm, rồi gọi 114 càng sớm càng tốt.</li>
+        <li class="flex gap-3"><i data-lucide="footprints" class="h-5 w-5 mt-1 shrink-0 text-ember"></i>Cúi thấp, dùng khăn ướt che mũi miệng, di chuyển theo lối thoát hiểm. Không dùng thang máy.</li>
+        <li class="flex gap-3"><i data-lucide="door-closed" class="h-5 w-5 mt-1 shrink-0 text-ember"></i>Đóng cửa phòng đang cháy lại để hạn chế khói và lửa lan.</li>
+        <li class="flex gap-3"><i data-lucide="ban" class="h-5 w-5 mt-1 shrink-0 text-ember"></i>Đã thoát ra ngoài thì không quay lại lấy đồ đạc.</li>
+      </ul>
+    </div>
+    <div class="rounded-2xl bg-crimson p-6 text-center">
+      <p class="font-semibold text-white/80">Cảnh sát PCCC &amp; CNCH</p>
+      <p class="text-6xl font-black">114</p>
+      <p class="mt-2 text-sm text-white/80">Miễn phí, hoạt động 24/7. Khi gọi, nói rõ địa chỉ, loại đám cháy và có người mắc kẹt hay không.</p>
+    </div>
+  </div>
+  <p class="border-t border-white/10 py-4 text-center text-sm text-white/50">Tài liệu mang tính tham khảo. Hãy tham gia tập huấn PCCC tại địa phương để thực hành đúng cách.</p>
+</footer>
+
+<!-- THANH GỌI 114 CỐ ĐỊNH -->
+<div class="fixed inset-x-0 bottom-0 z-50 bg-crimson/95 backdrop-blur shadow-[0_-6px_20px_rgba(0,0,0,.25)]">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
+    <p class="text-sm sm:text-base font-semibold text-white">Phát hiện cháy? Đừng chờ đợi.</p>
+    <a href="tel:114" class="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 font-black text-crimson hover:bg-ember hover:text-char transition">
+      <i data-lucide="phone" class="h-5 w-5"></i> Gọi 114
+    </a>
+  </div>
+</div>
+
+<script>
+/* ---------- DỮ LIỆU ---------- */
+/* Muốn dùng ảnh thật: dán đường dẫn ảnh vào trường img của từng bước (ví dụ "images/buoc1.jpg").
+   Để trống thì trang hiển thị minh họa biểu tượng. */
+const STEPS = [
+  { n: 1, vi: 'Kéo', en: 'Pull', icon: 'shield-off', img: '',
+    title: 'Kéo chốt an toàn',
+    short: 'Giật mạnh chốt hãm ở tay cầm để mở khóa bình.',
+    detail: 'Cầm bình thẳng đứng, giật chốt an toàn (thường có kẹp chì niêm phong) ra khỏi tay cầm. Đứng cách đám cháy khoảng 2–3 m, lưng hướng về lối thoát.' },
+  { n: 2, vi: 'Hướng', en: 'Aim', icon: 'crosshair', img: '',
+    title: 'Hướng vòi phun vào gốc lửa',
+    short: 'Nhắm vào gốc ngọn lửa, không nhắm vào phần ngọn.',
+    detail: 'Hướng loa phun vào gốc lửa, nơi nhiên liệu đang cháy. Nhắm vào ngọn lửa phía trên sẽ không dập được đám cháy. Đứng ở phía trên chiều gió.' },
+  { n: 3, vi: 'Bóp', en: 'Squeeze', icon: 'hand-grab', img: '',
+    title: 'Bóp van xịt',
+    short: 'Bóp chặt tay cầm để chất chữa cháy phun ra.',
+    detail: 'Bóp đều tay cầm để phun chất chữa cháy. Thả tay là ngừng phun. Bình cầm tay thường chỉ phun được khoảng 10–20 giây, vì vậy hãy phun đúng chỗ.' },
+  { n: 4, vi: 'Quét', en: 'Sweep', icon: 'move-horizontal', img: '',
+    title: 'Quét đều qua lại',
+    short: 'Quét vòi từ bên này sang bên kia, phủ kín gốc lửa.',
+    detail: 'Quét loa phun qua lại sát gốc lửa, tiến dần lên. Khi lửa tắt, vẫn quan sát thêm vì lửa có thể bùng lại. Sau khi dùng, dù còn chất bên trong, vẫn mang bình đi nạp lại.' }
+];
+
+const CHECKLIST = [
+  { id: 'dien', icon: 'zap', title: 'Điện và thiết bị nhiệt', items: [
+    'Dây điện không bị sờn, nứt, chuột cắn; ổ cắm không nóng hoặc cháy xém',
+    'Không cắm nhiều thiết bị công suất lớn vào cùng một ổ cắm',
+    'Rút điện bàn là, máy sấy, bình nước nóng khi không dùng',
+    'Có aptomat (CB) chống giật/quá tải và thử hoạt động định kỳ',
+    'Không sạc pin xe điện qua đêm ở lối ra vào hoặc cầu thang' ]},
+  { id: 'bep', icon: 'cooking-pot', title: 'Bếp gas và đun nấu', items: [
+    'Khóa van bình gas sau khi nấu xong và trước khi đi ngủ, đi vắng',
+    'Kiểm tra dây dẫn gas, van điều áp; thử rò gas bằng nước xà phòng, không dùng lửa',
+    'Không để người rời bếp khi đang đun nấu, nhất là chiên xào dầu mỡ',
+    'Có nắp vung hoặc chăn chữa cháy sẵn để úp chảo dầu bốc cháy',
+    'Giữ vật dễ cháy (giẻ, giấy, túi nilon) cách xa bếp' ]},
+  { id: 'loi', icon: 'door-open', title: 'Vật dụng dễ cháy và lối thoát hiểm', items: [
+    'Lối đi, cầu thang, cửa chính không chất đồ',
+    'Chìa khóa cửa, khóa lồng sắt đặt ở chỗ cả nhà biết và lấy được nhanh',
+    'Cất xăng, cồn, sơn, bình xịt xa nguồn nhiệt và ngoài tầm trẻ nhỏ',
+    'Lắp đầu báo khói và thử pin mỗi tháng',
+    'Cả nhà đã bàn kế hoạch thoát nạn và điểm tập trung bên ngoài' ]},
+  { id: 'dungcu', icon: 'package-check', title: 'Chuẩn bị dụng cụ ứng cứu', items: [
+    'Có bình chữa cháy đặt nơi dễ thấy, dễ lấy; kim đồng hồ ở vạch xanh',
+    'Có khăn ướt hoặc khăn tẩm nước để che mũi miệng',
+    'Có mặt nạ phòng độc hoặc mặt nạ thoát hiểm',
+    'Có búa phá kính thoát hiểm và đèn pin',
+    'Lưu số 114 trong danh bạ và dán ở nơi dễ thấy' ]}
+];
+
+/* ---------- 4 BƯỚC ---------- */
+const stepsEl = document.getElementById('steps');
+const detailEl = document.getElementById('step-detail');
+let current = 0;
+
+function visual(s, big) {
+  const h = big ? 'h-64 md:h-full min-h-[260px]' : 'h-40';
+  const inner = s.img
+    ? `<img src="${s.img}" alt="Minh họa: ${s.title}" loading="lazy" class="absolute inset-0 h-full w-full object-cover">`
+    : `<i data-lucide="${s.icon}" class="relative ${big ? 'h-28 w-28' : 'h-14 w-14'} text-ember" stroke-width="1.5"></i>`;
+  return `<div class="scene photo-fade relative flex ${h} items-center justify-center overflow-hidden">${inner}
+    <span class="absolute left-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-crimson text-xl font-black text-white ring-4 ring-white/20">${s.n}</span>
+    <span class="absolute bottom-3 left-4 z-10 text-sm font-semibold text-white/80">${s.en}</span></div>`;
+}
+
+function renderSteps() {
+  stepsEl.innerHTML = STEPS.map((s, i) => `
+    <button role="tab" aria-selected="${i === current}" data-i="${i}"
+      class="group overflow-hidden rounded-2xl bg-white text-left shadow transition hover:-translate-y-1 hover:shadow-xl ${i === current ? 'ring-4 ring-ember' : ''}">
+      ${visual(s, false)}
+      <div class="p-4">
+        <h3 class="text-xl font-extrabold">${s.vi}: ${s.title.replace(/^[^ ]+ /, '')}</h3>
+        <p class="mt-1 text-stone-600">${s.short}</p>
+      </div>
+    </button>`).join('');
+  const s = STEPS[current];
+  detailEl.innerHTML = `
+    ${visual(s, true)}
+    <div class="p-7 md:p-10 flex flex-col justify-center">
+      <p class="text-ember font-bold">Bước ${s.n} trên 4</p>
+      <h3 class="mt-1 text-3xl font-black">${s.title}</h3>
+      <p class="mt-4 text-lg leading-relaxed text-white/85">${s.detail}</p>
+      <div class="mt-6 flex gap-3">
+        <button data-nav="-1" class="rounded-xl border border-white/30 px-4 py-2 font-semibold hover:bg-white/10 disabled:opacity-30" ${current === 0 ? 'disabled' : ''}>Bước trước</button>
+        <button data-nav="1" class="rounded-xl bg-ember px-4 py-2 font-bold text-char hover:bg-orange-400 disabled:opacity-30" ${current === STEPS.length - 1 ? 'disabled' : ''}>Bước tiếp theo</button>
+      </div>
+    </div>`;
+  lucide.createIcons();
+}
+stepsEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if (!b) return;
+  current = +b.dataset.i; renderSteps();
+});
+detailEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-nav]'); if (!b) return;
+  current = Math.min(STEPS.length - 1, Math.max(0, current + +b.dataset.nav)); renderSteps();
+});
+
+/* ---------- CHECKLIST ---------- */
+const KEY = 'pccc-checklist-v1';
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { done = {}; }
+const listEl = document.getElementById('checklist');
+const total = CHECKLIST.reduce((a, g) => a + g.items.length, 0);
+
+function renderChecklist() {
+  listEl.innerHTML = CHECKLIST.map(g => `
+    <fieldset class="rounded-2xl bg-white p-5 shadow transition hover:shadow-lg">
+      <legend class="sr-only">${g.title}</legend>
+      <h3 class="flex items-center gap-3 text-xl font-extrabold">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-crimson text-white"><i data-lucide="${g.icon}" class="h-5 w-5"></i></span>${g.title}
+      </h3>
+      <ul class="mt-4 space-y-2">
+        ${g.items.map((t, i) => { const id = g.id + '-' + i; return `
+        <li><label class="flex cursor-pointer items-start gap-3 rounded-lg p-2 hover:bg-stone-100">
+          <input type="checkbox" class="peer sr-only" data-id="${id}" ${done[id] ? 'checked' : ''}>
+          <span class="check mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 ${done[id] ? 'border-crimson bg-crimson' : 'border-stone-400 bg-white'}">
+            ${done[id] ? '<svg viewBox="0 0 20 20" class="h-4 w-4 text-white" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 10l4 4 8-8"/></svg>' : ''}
+          </span>
+          <span class="${done[id] ? 'text-stone-400 line-through' : ''}">${t}</span>
+        </label></li>`; }).join('')}
+      </ul>
+    </fieldset>`).join('');
+  lucide.createIcons();
+  updateProgress();
+}
+function updateProgress() {
+  const n = Object.values(done).filter(Boolean).length;
+  const pct = Math.round(n / total * 100);
+  document.getElementById('progress-text').textContent = `${n}/${total} mục hoàn thành`;
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('bar-wrap').setAttribute('aria-valuenow', pct);
+  document.getElementById('progress-msg').textContent =
+    pct === 100 ? 'Tuyệt vời, nhà bạn đã sẵn sàng.' : pct >= 50 ? 'Đã được một nửa, tiếp tục nhé.' : 'Bắt đầu từ mục dễ nhất.';
+}
+listEl.addEventListener('change', e => {
+  const c = e.target.closest('input[data-id]'); if (!c) return;
+  done[c.dataset.id] = c.checked;
+  try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {}
+  const y = window.scrollY; renderChecklist(); window.scrollTo(0, y);
+  const el = listEl.querySelector(`[data-id="${c.dataset.id}"]`); if (el) el.focus({ preventScroll: true });
+});
+document.getElementById('reset').addEventListener('click', () => {
+  if (!confirm('Xóa toàn bộ các mục đã tích?')) return;
+  done = {}; try { localStorage.removeItem(KEY); } catch (e) {}
+  renderChecklist();
+});
+
+renderSteps();
+renderChecklist();
+</script>
+</body>
+</html>
