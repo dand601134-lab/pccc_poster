@@ -1,7 +1,3 @@
-Claude
-
-
-Index · HTML
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -57,7 +53,7 @@ tailwind.config = {
 </style>
 </head>
 <body class="bg-stone-100 font-sans text-char antialiased">
- 
+
 <!-- HEADER -->
 <header class="relative overflow-hidden bg-char text-white">
   <div class="absolute inset-0 opacity-60" style="background:radial-gradient(ellipse at 85% 0%, #B3121F, transparent 60%), radial-gradient(ellipse at 100% 100%, #FF6A13, transparent 45%)"></div>
@@ -83,9 +79,9 @@ tailwind.config = {
     </a>
   </div>
 </header>
- 
+
 <main class="mx-auto max-w-6xl px-5">
- 
+
   <!-- CẢNH BÁO TRƯỚC KHI DÙNG -->
   <section class="-mt-8 relative z-10">
     <div class="rounded-2xl bg-white p-5 shadow-xl border-l-8 border-ember flex gap-4 items-start">
@@ -93,7 +89,7 @@ tailwind.config = {
       <p class="text-base leading-relaxed"><strong>Chỉ chữa cháy khi đám cháy còn nhỏ</strong> và lối thoát hiểm phía sau lưng bạn còn thông. Lửa đã lan rộng, khói dày hoặc bạn không chắc chắn: <strong>rời khỏi nhà ngay và gọi 114.</strong></p>
     </div>
   </section>
- 
+
   <!-- SECTION 1 -->
   <section id="binh-chua-chay" class="py-16 scroll-mt-4">
     <div class="max-w-2xl">
@@ -143,7 +139,7 @@ tailwind.config = {
       </aside>
     </div>
   </section>
- 
+
   <!-- SECTION 2 -->
   <section id="kiem-tra" class="pb-16 scroll-mt-4">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -153,7 +149,7 @@ tailwind.config = {
       </div>
       <button id="reset" class="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold hover:bg-stone-200 transition">Làm lại từ đầu</button>
     </div>
- 
+
     <div class="mt-8 rounded-2xl bg-white p-5 shadow">
       <div class="flex items-center justify-between text-sm font-semibold">
         <span id="progress-text">0/0 mục hoàn thành</span>
@@ -163,10 +159,10 @@ tailwind.config = {
         <div id="bar" class="h-full w-0 rounded-full bg-gradient-to-r from-crimson to-ember transition-all duration-500"></div>
       </div>
     </div>
- 
+
     <div id="checklist" class="mt-6 grid gap-5 md:grid-cols-2"></div>
   </section>
- 
+
   <!-- LOẠI BÌNH -->
   <section class="pb-16">
     <h2 class="text-2xl md:text-3xl font-black tracking-tight">Chọn đúng bình cho đúng đám cháy</h2>
@@ -186,7 +182,7 @@ tailwind.config = {
     </div>
   </section>
 </main>
- 
+
 <!-- FOOTER -->
 <footer class="bg-char text-white">
   <div class="mx-auto max-w-6xl px-5 py-12 grid gap-8 md:grid-cols-3">
@@ -207,7 +203,7 @@ tailwind.config = {
   </div>
   <p class="border-t border-white/10 py-4 text-center text-sm text-white/50">Tài liệu mang tính tham khảo. Hãy tham gia tập huấn PCCC tại địa phương để thực hành đúng cách.</p>
 </footer>
- 
+
 <!-- THANH GỌI 114 CỐ ĐỊNH -->
 <div class="fixed inset-x-0 bottom-0 z-50 bg-crimson/95 backdrop-blur shadow-[0_-6px_20px_rgba(0,0,0,.25)]">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
@@ -217,7 +213,7 @@ tailwind.config = {
     </a>
   </div>
 </div>
- 
+
 <script>
 /* ---------- DỮ LIỆU ---------- */
 const CHECKLIST = [
@@ -246,7 +242,7 @@ const CHECKLIST = [
     'Có búa phá kính thoát hiểm và đèn pin',
     'Lưu số 114 trong danh bạ và dán ở nơi dễ thấy' ]}
 ];
- 
+
 /* ---------- GAME 3D MÔ PHỎNG CHỮA CHÁY (three.js) ---------- */
 const $ = id => document.getElementById(id);
 const icons = () => { try { if (window.lucide) lucide.createIcons(); } catch (e) {} };
@@ -346,7 +342,7 @@ function buildScene() {
   const rs = () => { const w = box.clientWidth, h = Math.max(280, Math.round(w * (w < 640 ? .75 : .5))); R.setSize(w, h, false); R.domElement.style.width = '100%'; R.domElement.style.height = h + 'px'; cam.aspect = w / h; cam.updateProjectionMatrix(); };
   rs(); window.addEventListener('resize', rs);
 }
- 
+
 const fireBase = () => Math.min(1.45, 1 + g.mistakes * 0.08);
 const distFire = () => Math.hypot(FX - g.x, g.z);
 const dirFire = () => { const d = distFire() || 1; return [(FX - g.x) / d, -g.z / d]; };
@@ -369,7 +365,7 @@ function setPreset(s, first) {
   if (s === 1) C.tPhi = th; else if (s >= 2 && s < 5) C.tPhi = Math.atan2(-Math.cos(th), Math.sin(th)); else if (first) C.tPhi = .35;
   if (first) { C.phi = C.tPhi; C.el = C.tEl; C.dist = C.tDist; C.ahead = C.tAhead; C.fy = C.tFy; }
 }
- 
+
 const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
 function frame(dt, t, moving, mvx, mvz) {
   if (!R) return;
@@ -436,7 +432,7 @@ function setInfo(txt, ok) {
   const el = $('aimInfo'); if (el.dataset.v === txt) return; el.dataset.v = txt; el.textContent = txt;
   el.className = 'mt-3 rounded-xl px-4 py-2 text-sm font-bold ' + (ok ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
 }
- 
+
 const MSG = { info: 'border-stone-300 bg-white text-char', wrong: 'border-red-500 bg-red-50 text-red-900', good: 'border-green-600 bg-green-50 text-green-900', warn: 'border-orange-500 bg-orange-50 text-orange-900', safe: 'border-green-600 bg-green-50 text-green-900' };
 function say(type, text) {
   const m = $('msg'); m.className = ''; void m.offsetWidth;
@@ -444,7 +440,7 @@ function say(type, text) {
   m.innerHTML = ({ wrong: '<strong>Sai rồi! </strong>', good: '<strong>Đúng! </strong>', warn: '<strong>Cảnh báo! </strong>', safe: '<strong>Vùng an toàn! </strong>' }[type] || '') + text;
 }
 const next = () => showHint && g.step < 5 ? ' Tiếp theo: <b>' + STEPS[g.step].name + '</b>.' : '';
- 
+
 function render() {
   $('mistakes').textContent = g.mistakes;
   $('stepper').innerHTML = STEPS.map((st, i) => {
@@ -459,7 +455,7 @@ function render() {
     b.classList.toggle('ring-4', !!on); b.classList.toggle('ring-ember', !!on);
   });
 }
- 
+
 /* Báo hiệu theo vị trí: vào vùng an toàn (xanh) hoặc quá gần lửa (đỏ, rung) */
 function checkNear() {
   const d = distFire(), live = !g.done && g.prog < 1;
@@ -530,7 +526,7 @@ function resetGame() {
   say('info', 'Dùng <b>W A S D</b> (hoặc phím mũi tên) để đi, <b>giữ chuột kéo</b> để xoay camera 360°, <b>lăn chuột</b> để lại gần/ra xa. Đi tới trạm bình bên trái rồi bấm <b>Nhặt bình</b>.');
   render(); checkNear();
 }
- 
+
 function initGame() {
   buildScene();
   $('actions').innerHTML = STEPS.map(s => `<button data-act="${s.key}" class="rounded-xl bg-crimson px-3 py-3 text-sm font-bold text-white transition hover:bg-deep">${s.label} <kbd class="ml-1 rounded bg-white/25 px-1.5 text-xs">${s.hot}</kbd></button>`).join('');
@@ -584,14 +580,14 @@ function initGame() {
     requestAnimationFrame(loop);
   })(last);
 }
- 
+
 /* ---------- CHECKLIST ---------- */
 const KEY = 'pccc-checklist-v1';
 let done = {};
 try { done = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { done = {}; }
 const listEl = document.getElementById('checklist');
 const total = CHECKLIST.reduce((a, g) => a + g.items.length, 0);
- 
+
 function renderChecklist() {
   listEl.innerHTML = CHECKLIST.map(g => `
     <fieldset class="rounded-2xl bg-white p-5 shadow transition hover:shadow-lg">
@@ -634,10 +630,9 @@ document.getElementById('reset').addEventListener('click', () => {
   done = {}; try { localStorage.removeItem(KEY); } catch (e) {}
   renderChecklist();
 });
- 
+
 initGame();
 renderChecklist();
 </script>
 </body>
 </html>
- 
