@@ -48,6 +48,8 @@ tailwind.config = {
   .pop { animation: pop .5s ease-out; }
   @keyframes pop { 0% { transform: scale(.5); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
   .shake-loop { animation: shake .45s infinite; }
+  .safe-flash { animation: safeFlash 1.3s ease-out; box-shadow: inset 0 0 80px 18px rgba(34,197,94,.8); }
+  @keyframes safeFlash { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
   @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
   @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
@@ -100,6 +102,7 @@ tailwind.config = {
       <div>
         <div id="stage" tabindex="0" aria-label="Khung mô phỏng chữa cháy. Dùng phím mũi tên để di chuyển" class="relative overflow-hidden rounded-3xl bg-char shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-ember">
           <div id="scene"></div>
+          <div id="safeFlash" class="pointer-events-none absolute inset-0 rounded-3xl"></div>
           <div class="pointer-events-none absolute inset-x-0 top-3 flex justify-center">
             <div id="safeBanner" class="hidden items-center gap-2 rounded-xl bg-green-600 px-4 py-2 text-sm font-black text-white shadow-lg ring-4 ring-green-300 sm:text-base" role="status">✓ BẠN ĐÃ VÀO VÙNG AN TOÀN</div>
             <div id="nearWarn" class="hidden shake-loop items-center gap-2 rounded-xl bg-crimson px-4 py-2 text-sm font-black text-white shadow-lg ring-4 ring-ember sm:text-base" role="alert">⚠ QUÁ GẦN ĐÁM CHÁY! LÙI LẠI NGAY</div>
@@ -111,15 +114,17 @@ tailwind.config = {
             <button id="again" class="mt-2 rounded-xl bg-ember px-6 py-3 font-bold text-char hover:bg-orange-400">Chơi lại</button>
           </div>
         </div>
-        <p class="mt-2 text-sm text-stone-500">Bấm vào khung game. <b>W A S D</b> hoặc mũi tên: đi (theo hướng camera). <b>Giữ chuột kéo</b>: xoay 360°. <b>Lăn chuột</b>: lại gần/ra xa. <b>R/F</b>: nâng/hạ vòi. <b>E</b> nhặt bình, <b>1 2 3 4</b>: các thao tác. Khi quét: giữ chuột trái kéo để điều khiển vòi, chuột phải để xoay camera.</p>
+        <p class="mt-2 text-sm text-stone-500">Bấm vào khung game. <b>W A S D</b> hoặc mũi tên: đi (theo hướng camera). <b>Giữ chuột kéo</b>: xoay 360° quanh nhân vật. <b>Lăn chuột</b> hoặc chụm 2 ngón: lại gần/ra xa. <b>Z/X</b>: ngắm cao/thấp. <b>E</b> nhặt bình, <b>1 2 3 4</b>: các thao tác. Khi quét: <b>giữ chuột trái và kéo lên/xuống</b> để lửa nhỏ dần, <b>chuột phải kéo</b> để xoay camera.</p>
         <div class="mt-4 grid items-center gap-3 sm:grid-cols-[auto_1fr]">
           <div class="flex flex-wrap gap-2">
             <button id="btnF" class="flex select-none items-center gap-2 rounded-xl bg-char px-5 py-3 font-bold text-white active:bg-crimson" style="touch-action:none"><i data-lucide="arrow-up" class="h-5 w-5"></i>Lên</button>
             <button id="btnB" class="flex select-none items-center gap-2 rounded-xl bg-char px-5 py-3 font-bold text-white active:bg-crimson" style="touch-action:none"><i data-lucide="arrow-down" class="h-5 w-5"></i>Lùi</button>
             <button id="btnL" class="flex select-none items-center gap-2 rounded-xl bg-char px-5 py-3 font-bold text-white active:bg-crimson" style="touch-action:none"><i data-lucide="arrow-left" class="h-5 w-5"></i>Trái</button>
             <button id="btnR" class="flex select-none items-center gap-2 rounded-xl bg-char px-5 py-3 font-bold text-white active:bg-crimson" style="touch-action:none">Phải<i data-lucide="arrow-right" class="h-5 w-5"></i></button>
-            <button id="btnU" class="flex select-none items-center gap-2 rounded-xl bg-ember px-5 py-3 font-bold text-char active:bg-orange-300" style="touch-action:none"><i data-lucide="arrow-up" class="h-5 w-5"></i>Nâng vòi</button>
-            <button id="btnD" class="flex select-none items-center gap-2 rounded-xl bg-ember px-5 py-3 font-bold text-char active:bg-orange-300" style="touch-action:none"><i data-lucide="arrow-down" class="h-5 w-5"></i>Hạ vòi</button>
+            <button id="btnU" class="flex select-none items-center gap-2 rounded-full bg-sky-600 px-5 py-3 font-bold text-white active:bg-sky-800" style="touch-action:none"><i data-lucide="chevrons-up" class="h-5 w-5"></i>Ngắm cao <kbd class="rounded bg-white/25 px-1.5 text-xs">Z</kbd></button>
+            <button id="btnD" class="flex select-none items-center gap-2 rounded-full bg-sky-600 px-5 py-3 font-bold text-white active:bg-sky-800" style="touch-action:none"><i data-lucide="chevrons-down" class="h-5 w-5"></i>Ngắm thấp <kbd class="rounded bg-white/25 px-1.5 text-xs">X</kbd></button>
+            <button id="btnZi" class="flex select-none items-center gap-2 rounded-full bg-stone-300 px-4 py-3 font-bold text-char active:bg-stone-400" style="touch-action:none"><i data-lucide="zoom-in" class="h-5 w-5"></i>Lại gần</button>
+            <button id="btnZo" class="flex select-none items-center gap-2 rounded-full bg-stone-300 px-4 py-3 font-bold text-char active:bg-stone-400" style="touch-action:none"><i data-lucide="zoom-out" class="h-5 w-5"></i>Ra xa</button>
           </div>
           <div id="actions" class="grid grid-cols-2 gap-2 sm:grid-cols-5"></div>
         </div>
@@ -253,13 +258,14 @@ const HIT_LOW = 0.75, HIT_HIGH = 1.2;  // độ cao hợp lệ của điểm nh�
 const STEPS = [
   { key: 'pick',    label: 'Nhặt bình', hot: 'E', name: 'Lấy bình chữa cháy',    hint: 'Đi tới trạm bình (biển xanh, bên trái) rồi bấm "Nhặt bình".' },
   { key: 'pull',    label: 'Kéo chốt',  hot: '1', name: 'Kéo chốt an toàn',      hint: 'Giật chốt an toàn ở tay cầm để mở khóa bình.' },
-  { key: 'aim',     label: 'Hướng vòi', hot: '2', name: 'Hướng vòi vào gốc lửa', hint: 'Đứng trong vùng xanh, chỉnh vòi bằng R/F (hoặc nút Nâng/Hạ vòi) cho vòng ngắm nằm ở GỐC lửa, rồi bấm "Hướng vòi".' },
+  { key: 'aim',     label: 'Hướng vòi', hot: '2', name: 'Hướng vòi vào gốc lửa', hint: 'Đứng trong vùng xanh, chỉnh vòi bằng Z/X (hoặc nút Ngắm cao/Ngắm thấp) cho vòng ngắm nằm ở GỐC lửa, rồi bấm "Hướng vòi".' },
   { key: 'squeeze', label: 'Bóp van',   hot: '3', name: 'Bóp van xịt',           hint: 'Giữ nguyên vị trí an toàn và bóp van để phun chất chữa cháy.' },
-  { key: 'sweep',   label: 'Quét',      hot: '4', name: 'Quét đều qua lại',      hint: 'Bấm "Quét", rồi giữ chuột trái kéo lên/xuống và sang hai bên để quét qua GỐC lửa. Lửa sẽ nhỏ dần.' }
+  { key: 'sweep',   label: 'Quét',      hot: '4', name: 'Quét đều qua lại',      hint: 'Bấm "Quét", rồi giữ chuột trái kéo lên/xuống và sang hai bên để quét qua GỐC lửa. Giữ chuột càng đều, lửa càng nhỏ dần.' }
 ];
-let g = {}, showHint = true, joyX = 0, joyY = 0, holdP = 0, R = null, sc, cam, zoneTimer;
+let g = {}, showHint = true, joyX = 0, joyY = 0, holdP = 0, zoomD = 0, R = null, sc, cam, zoneTimer;
 const keys = {}, W = {}, vis = { pitch: 25, yaw: 0, fire: 1, lever: 0, pin: null, theta: 0, lastStep: -1, mv: 0, flash: 0 };
-const C = { phi: .35, el: .32, dist: 9, ahead: 2.5, fy: 1.1, tPhi: .35, tEl: .32, tDist: 9, tAhead: 2.5, tFy: 1.1 };
+const C = { phi: .35, el: .32, dist: 9, ahead: 2.5, fy: 1.1, tPhi: .35, tEl: .32, tDist: 9, tAhead: 2.5, tFy: 1.1, free: false };
+const freeCam = () => { C.free = true; C.tAhead = Math.min(C.tAhead, 1); };
 const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 const rad = d => d * Math.PI / 180, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const mat = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: .7, metalness: .1 }, o));
@@ -273,8 +279,9 @@ function label(text, w, h, bg, fg, flat) {
 }
 function limb(a, b, r, color, parent) {
   const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b);
-  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, A.distanceTo(B), 10), mat(color));
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, A.distanceTo(B), 16), mat(color));
   m.position.copy(A).add(B).multiplyScalar(.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize()); parent.add(m);
+  [A, B].forEach(v => mesh(new THREE.SphereGeometry(r, 16, 12), mat(color), v.x, v.y, v.z, parent));
 }
 /* Bình chữa cháy 3D: có chốt (pin), cần bóp (lever), vòi (noz) */
 function makeExt() {
@@ -328,10 +335,19 @@ function buildScene() {
     const m = mesh(new THREE.ConeGeometry(r, h, 16), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .85 }), x, h / 2, z, W.fire); m.userData.ph = Math.random() * 6; W.flames.push(m);
   });
   /* Nhân vật */
-  W.p = new THREE.Group(); sc.add(W.p); const sk = 0xe8b48c, bl = 0x3b82f6;
-  mesh(new THREE.BoxGeometry(.5, .7, .3), mat(bl), 0, 1.05, 0, W.p); mesh(new THREE.SphereGeometry(.17, 20, 20), mat(sk), .03, 1.62, 0, W.p);
-  W.legs = [.1, -.1].map(z => { const l = new THREE.Group(); l.position.set(0, .7, z); W.p.add(l); mesh(new THREE.CylinderGeometry(.09, .09, .7, 12), mat(0x1f2937), 0, -.35, 0, l); return l; });
-  limb([.05, 1.3, .22], [.5, 1.44, .14], .07, bl, W.p); limb([.05, 1.3, -.22], [.85, 1.0, .1], .07, bl, W.p);
+  W.p = new THREE.Group(); sc.add(W.p); const sk = 0xe8b48c, bl = 0x3b82f6, pn = 0x1f2937;
+  const ball = (r, c, x, y, z, sx, sy, sz, par) => { const m = mesh(new THREE.SphereGeometry(r, 28, 20), mat(c, { roughness: .55 }), x, y, z, par || W.p); m.scale.set(sx, sy, sz); return m; };
+  ball(.3, bl, 0, 1.05, 0, .95, 1.25, .78);          // thân tròn
+  ball(.24, pn, 0, .74, 0, .95, .7, .85);            // hông
+  ball(.09, sk, .01, 1.5, 0, 1, 1, 1);               // cổ
+  ball(.2, sk, .03, 1.69, 0, 1.02, 1.05, 1.02);      // đầu tròn
+  ball(.205, 0x3a2a1e, -.02, 1.75, 0, 1.02, .78, 1.03); // tóc
+  [-.075, .075].forEach(z => ball(.03, 0x111111, .195, 1.7, z, 1, 1.2, 1)); // mắt
+  [-.1, .1].forEach(z => ball(.035, 0xf19a8a, .18, 1.63, z * 1.15, 1, .7, .6)); // má hồng
+  W.legs = [.1, -.1].map(z => { const l = new THREE.Group(); l.position.set(0, .7, z); W.p.add(l);
+    mesh(new THREE.CylinderGeometry(.085, .085, .6, 16), mat(pn), 0, -.31, 0, l); ball(.1, pn, 0, 0, 0, 1, 1, 1, l); ball(.1, 0x111827, .06, -.63, 0, 1.6, .7, 1.05, l); return l; });
+  limb([.05, 1.3, .22], [.5, 1.44, .14], .085, bl, W.p); limb([.05, 1.3, -.22], [.85, 1.0, .1], .085, bl, W.p);
+  ball(.085, sk, .5, 1.44, .14, 1, 1, 1); ball(.085, sk, .85, 1.0, .1, 1, 1, 1);
   rebuildHeld();
   const N = 90; W.N = N; W.pos = new Float32Array(N * 3).fill(-50); W.vel = new Float32Array(N * 3); W.life = new Float32Array(N);
   const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(W.pos, 3));
@@ -354,8 +370,8 @@ function aimData() {
 }
 function aimError() {
   const a = aimData(); if (a.ok) return null;
-  return a.high ? 'Vòi đang nhắm vào phần NGỌN lửa nên không dập được. Hãy hạ vòi xuống để vòng ngắm nằm ở GỐC lửa (phím F hoặc nút Hạ vòi).'
-                : 'Vòi đang chúc xuống quá thấp, chất chữa cháy sẽ phun xuống sàn. Hãy nâng vòi lên để nhắm đúng GỐC lửa (phím R hoặc nút Nâng vòi).';
+  return a.high ? 'Vòi đang nhắm vào phần NGỌN lửa nên không dập được. Hãy hạ vòi xuống để vòng ngắm nằm ở GỐC lửa (phím X hoặc nút Ngắm thấp).'
+                : 'Vòi đang chúc xuống quá thấp, chất chữa cháy sẽ phun xuống sàn. Hãy nâng vòi lên để nhắm đúng GỐC lửa (phím Z hoặc nút Ngắm cao).';
 }
 /* Camera quay quanh nhân vật; mỗi bước có một góc nhìn gợi ý, người chơi vẫn xoay tự do 360° */
 function setPreset(s, first) {
@@ -369,7 +385,7 @@ function setPreset(s, first) {
 const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
 function frame(dt, t, moving, mvx, mvz) {
   if (!R) return;
-  if (vis.lastStep !== g.step) { setPreset(g.step, vis.lastStep < 0); vis.lastStep = g.step; }
+  if (vis.lastStep !== g.step) { if (!C.free || vis.lastStep < 0) setPreset(g.step, vis.lastStep < 0); vis.lastStep = g.step; }
   const ks = 1 - Math.exp(-dt * 5);
   C.phi += wrap(C.tPhi - C.phi) * ks; C.el += (C.tEl - C.el) * ks; C.dist += (C.tDist - C.dist) * ks; C.ahead += (C.tAhead - C.ahead) * ks; C.fy += (C.tFy - C.fy) * ks;
   /* Nhân vật: quay mặt theo hướng đi; từ bước Hướng vòi trở đi tự quay mặt về phía đám cháy */
@@ -393,8 +409,9 @@ function frame(dt, t, moving, mvx, mvz) {
   /* Quét: giữ chuột đưa tia vào gốc lửa thì lửa nhỏ dần */
   const a = aimData(), rErr = rangeError(), hit = a.ok && Math.abs(a.lat) < .9 && !rErr;
   if (g.sweeping && !g.done) {
-    if (hit) g.prog = Math.min(1, g.prog + (.07 + .12 * vis.mv) * dt);
-    const info = hit ? 'Đang trúng gốc lửa ✓ — lửa còn ' + Math.round((1 - g.prog) * 100) + '%' : rErr ? 'Bạn đã ra khỏi vùng an toàn — tia phun không hiệu quả' : 'Tia phun đang trượt khỏi gốc lửa — kéo chuột lên/xuống, trái/phải để chỉnh';
+    const pdn = (keys.r || keys.z ? 1 : 0) - (keys.f || keys.x ? 1 : 0) + holdP, active = g.hold || pdn !== 0;
+    if (hit && active) g.prog = Math.min(1, g.prog + (.05 + .15 * vis.mv) * dt);
+    const info = hit ? (active ? 'Đang trúng gốc lửa ✓ — lửa còn ' : 'Đúng gốc lửa. Giữ chuột trái và kéo lên/xuống để lửa nhỏ dần — còn ') + Math.round((1 - g.prog) * 100) + '%' : rErr ? 'Bạn đã ra khỏi vùng an toàn — tia phun không hiệu quả' : 'Tia phun đang trượt khỏi gốc lửa — kéo chuột lên/xuống, trái/phải để chỉnh';
     setInfo(info, hit);
     if (g.prog >= 1) finish();
   }
@@ -410,7 +427,7 @@ function frame(dt, t, moving, mvx, mvz) {
     const [dx, dz] = dirFire(), hy = clamp(a.hy, .1, 3.2);
     W.ring.position.set(g.x + dx * a.dd - dz * a.lat, hy, g.z + dz * a.dd + dx * a.lat); W.ring.lookAt(cam.position); W.ring.material.color.setHex(a.ok && Math.abs(a.lat) < .9 ? 0x22c55e : 0xef4444);
     W.lineGeo.attributes.position.array.set([g.x + dx * a.txf - dz * .14, a.ty, g.z + dz * a.txf + dx * .14, W.ring.position.x, hy, W.ring.position.z]); W.lineGeo.attributes.position.needsUpdate = true;
-    if (!g.sweeping) setInfo(a.ok ? 'Vòng ngắm đúng GỐC lửa ✓ — bấm "Hướng vòi"' : a.high ? 'Vòng ngắm đang ở NGỌN lửa (quá cao) — hạ vòi xuống (F)' : 'Vòng ngắm đang quá thấp — nâng vòi lên (R)', a.ok);
+    if (!g.sweeping) setInfo(a.ok ? 'Vòng ngắm đúng GỐC lửa ✓ — bấm "Hướng vòi"' : a.high ? 'Vòng ngắm đang ở NGỌN lửa (quá cao) — hạ vòi xuống (X)' : 'Vòng ngắm đang quá thấp — nâng vòi lên (Z)', a.ok);
   } else if (!g.sweeping) $('aimInfo').className = 'hidden';
   /* Tia phun: lấy vị trí và hướng thật của miệng vòi */
   u.noz.localToWorld(tmp.set(.32, 0, 0)); tmp2.set(1, 0, 0).transformDirection(u.noz.matrixWorld);
@@ -464,15 +481,18 @@ function checkNear() {
   if (near && !g.near) {
     say('warn', 'Bạn đang đứng quá gần đám cháy, rất nguy hiểm vì nhiệt và lửa bén. Hãy lùi lại vùng xanh (cách lửa khoảng 2–3 m).');
     const s2 = $('scene'); s2.classList.remove('shake'); void s2.offsetWidth; s2.classList.add('shake');
-    if (navigator.vibrate) navigator.vibrate(200);
+    beep(180, .35, .15); if (navigator.vibrate) navigator.vibrate(200);
   }
   if (safe && !g.safe) {
     const b = $('safeBanner'); b.classList.remove('hidden'); b.classList.add('flex', 'pop'); clearTimeout(zoneTimer); zoneTimer = setTimeout(() => { b.classList.add('hidden'); b.classList.remove('flex', 'pop'); }, 2200);
+    const f = $('safeFlash'); f.classList.remove('safe-flash'); void f.offsetWidth; f.classList.add('safe-flash'); beep(660, .15); setTimeout(() => beep(880, .25), 130);
     vis.flash = 1.5; say('safe', 'Bạn đã vào vùng an toàn, cách đám cháy khoảng 2–3 m. Đứng ở đây để thao tác chữa cháy.');
     if (navigator.vibrate) navigator.vibrate(60);
   }
   g.near = near; g.safe = safe;
 }
+let ac;
+function beep(f, d, v) { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), n = ac.createGain(); o.type = 'sine'; o.frequency.value = f; n.gain.setValueAtTime(v || .12, ac.currentTime); n.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(n); n.connect(ac.destination); o.start(); o.stop(ac.currentTime + d); } catch (e) {} }
 function wrong(text) {
   g.mistakes++;
   say('wrong', text + ' Làm lại: <b>' + STEPS[g.step].name + '</b>. ' + STEPS[g.step].hint);
@@ -512,7 +532,7 @@ function act(key) {
   render();
 }
 function finish() {
-  g.done = true; g.step = 5; g.spraying = false; g.sweeping = false; g.prog = 1; render(); checkNear(); $('aimInfo').className = 'hidden';
+  g.hold = false; g.done = true; g.step = 5; g.spraying = false; g.sweeping = false; g.prog = 1; render(); checkNear(); $('aimInfo').className = 'hidden';
   const m = g.mistakes;
   $('end-text').textContent = (m === 0 ? 'Xuất sắc, bạn không sai lần nào. ' : m <= 2 ? 'Làm tốt, chỉ sai ' + m + ' lần. ' : 'Bạn sai ' + m + ' lần, hãy luyện thêm để nhớ thứ tự. ') +
     'Ngoài đời, dù lửa đã tắt vẫn phải quan sát thêm vì lửa có thể bùng lại, và gọi 114 nếu cần.';
@@ -520,8 +540,8 @@ function finish() {
   say('good', 'Bạn đã dập tắt đám cháy.');
 }
 function resetGame() {
-  g = { x: 6, z: 2.5, step: 0, pin: true, spraying: false, sweeping: false, prog: 0, yaw: 0, mistakes: 0, done: false, near: false, safe: false, pitch: 25 };
-  if (R) { rebuildHeld(); vis.pitch = 25; vis.yaw = 0; vis.theta = 0; vis.fire = fireBase(); vis.lastStep = -1; vis.mv = 0; W.life.fill(0); }
+  g = { x: 6, z: 2.5, step: 0, pin: true, spraying: false, sweeping: false, hold: false, prog: 0, yaw: 0, mistakes: 0, done: false, near: false, safe: false, pitch: 25 };
+  C.free = false; if (R) { rebuildHeld(); vis.pitch = 25; vis.yaw = 0; vis.theta = 0; vis.fire = fireBase(); vis.lastStep = -1; vis.mv = 0; W.life.fill(0); }
   $('end').classList.add('hidden'); $('end').classList.remove('flex'); $('aimInfo').className = 'hidden';
   say('info', 'Dùng <b>W A S D</b> (hoặc phím mũi tên) để đi, <b>giữ chuột kéo</b> để xoay camera 360°, <b>lăn chuột</b> để lại gần/ra xa. Đi tới trạm bình bên trái rồi bấm <b>Nhặt bình</b>.');
   render(); checkNear();
@@ -533,32 +553,36 @@ function initGame() {
   $('actions').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act); });
   const press = (id, set) => { const b = $(id); b.addEventListener('pointerdown', e => { e.preventDefault(); set(1); });
     ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, () => set(0))); };
-  press('btnF', v => joyY = v); press('btnB', v => joyY = -v); press('btnL', v => joyX = -v); press('btnR', v => joyX = v); press('btnU', v => holdP = v); press('btnD', v => holdP = -v);
+  press('btnF', v => joyY = v); press('btnB', v => joyY = -v); press('btnL', v => joyX = -v); press('btnR', v => joyX = v); press('btnU', v => holdP = v); press('btnD', v => holdP = -v); press('btnZi', v => zoomD = -v); press('btnZo', v => zoomD = v);
   const st = $('stage'), hot = { e: 'pick', 1: 'pull', 2: 'aim', 3: 'squeeze', 4: 'sweep' };
   st.style.touchAction = 'none';
   st.addEventListener('keydown', e => {
     const k = e.key.toLowerCase();
-    if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'a', 'd', 'w', 's', 'r', 'f'].includes(k)) { keys[k] = 1; e.preventDefault(); }
+    if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'a', 'd', 'w', 's', 'r', 'f', 'z', 'x'].includes(k)) { keys[k] = 1; e.preventDefault(); }
     else if (hot[k] && !e.repeat) act(hot[k]);
   });
   st.addEventListener('keyup', e => { delete keys[e.key.toLowerCase()]; });
   st.addEventListener('blur', () => { for (const k in keys) delete keys[k]; });
   /* Chuột: kéo = xoay camera 360°; lăn = lại gần/ra xa; khi đang quét thì chuột trái điều khiển vòi, chuột phải xoay camera */
-  let drag = null;
+  let drag = null, pinch = 0; const ptrs = new Map();
   st.addEventListener('pointerdown', e => {
     if (e.target.closest('button')) return; st.focus();
-    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, mode: e.button === 0 && g.sweeping && !g.done ? 'nozzle' : 'orbit' };
+    ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if (ptrs.size === 2) { const [p, q] = [...ptrs.values()]; pinch = Math.hypot(p[0] - q[0], p[1] - q[1]); drag = null; g.hold = false; }
+    else if (ptrs.size === 1) { drag = { id: e.pointerId, x: e.clientX, y: e.clientY, mode: e.button === 0 && g.sweeping && !g.done ? 'nozzle' : 'orbit' }; if (drag.mode === 'nozzle') g.hold = true; }
     st.setPointerCapture(e.pointerId); e.preventDefault();
   });
   st.addEventListener('pointermove', e => {
+    if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if (ptrs.size === 2) { const [p, q] = [...ptrs.values()], d = Math.hypot(p[0] - q[0], p[1] - q[1]); if (pinch && d) { C.tDist = clamp(C.tDist * pinch / d, 1.3, 18); freeCam(); } pinch = d; return; }
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
-    if (drag.mode === 'orbit') { C.tPhi -= dx * .006; C.tEl = clamp(C.tEl + dy * .005, .04, 1.4); }
+    if (drag.mode === 'orbit') { freeCam(); C.tPhi -= dx * .006; C.tEl = clamp(C.tEl + dy * .005, .04, 1.4); }
     else { g.pitch = clamp(g.pitch - dy * .15, -45, 30); g.yaw = clamp(g.yaw - dx * .004, -.6, .6); vis.mv = Math.min(1, vis.mv + (Math.abs(dx) + Math.abs(dy)) * .02); }
   });
-  ['pointerup', 'pointercancel'].forEach(ev => st.addEventListener(ev, e => { if (drag && e.pointerId === drag.id) drag = null; }));
+  ['pointerup', 'pointercancel'].forEach(ev => st.addEventListener(ev, e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = 0; if (drag && e.pointerId === drag.id) { drag = null; g.hold = false; } }));
   st.addEventListener('contextmenu', e => e.preventDefault());
-  st.addEventListener('wheel', e => { e.preventDefault(); C.tDist = clamp(C.tDist * (1 + e.deltaY * .0012), 1.3, 16); }, { passive: false });
+  st.addEventListener('wheel', e => { e.preventDefault(); freeCam(); C.tDist = clamp(C.tDist * (1 + e.deltaY * .0012), 1.3, 18); }, { passive: false });
   $('hintToggle').addEventListener('change', e => { showHint = e.target.checked; render(); });
   $('restart').addEventListener('click', resetGame); $('again').addEventListener('click', resetGame);
   resetGame(); icons();
@@ -574,7 +598,9 @@ function initGame() {
       const d = distFire(); if (d < 1.15) { const [dx, dz] = dirFire(); g.x = FX - dx * 1.15; g.z = -dz * 1.15; }
       checkNear();
     }
-    const pd = (keys.r ? 1 : 0) - (keys.f ? 1 : 0) + holdP;
+    const pd = (keys.r || keys.z ? 1 : 0) - (keys.f || keys.x ? 1 : 0) + holdP;
+    if (pd && g.sweeping) vis.mv = Math.min(1, vis.mv + dt * 5);
+    if (zoomD) { C.tDist = clamp(C.tDist * (1 + zoomD * dt * 1.5), 1.3, 18); freeCam(); }
     if (pd && g.step >= 2 && g.step <= 4) g.pitch = clamp(g.pitch + pd * 22 * dt, -45, 30);
     frame(dt, now / 1000, moving, mvx, mvz);
     requestAnimationFrame(loop);
